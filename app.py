@@ -7,11 +7,12 @@ import humanize
 import pandas as pd
 import plotly.express as px
 
-import shiny
 from shiny import reactive
 from shiny.express import render, ui, input
 from shinywidgets import render_plotly
 import shinyswatch
+
+from .ttx import modTtx
 
 # CATEGORIES *******************************************************************
 CATEGORIES = ('Cc|Cf|Cs|Co|Cn|'
@@ -180,6 +181,11 @@ with ui.layout_columns(col_widths=(4, 8), fillable=True):
 
 # Panels -----------------------------------------------------------------------
 with ui.navset_pill():
+
+    # Font Tools Panel ---------------------------------------------------------
+    with ui.nav_panel("Font Tools"):
+        modTtx('ttx')
+
 
     # Counts Panel -------------------------------------------------------------
     with ui.nav_panel("Counts"):
