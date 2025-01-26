@@ -6,6 +6,13 @@ Shinomni (combination of *Shiny* and *Omni*) is `Shiny` application aggregating 
 ### UTF Analyzer
 - Analyses UTF8 text files and provides statistical analysis of the usage of various unicode characters, their categories, blocks and scripts.
 
+### Font Analyzer
+- Renders and displays glyphs of selected font in order of appearance in font.
+
+### Raqm Layout
+- Render given text with Raqm layout engine using specified font, direction and language.
+
+
 ## Setup
 1. Install `Shiny Server` by following the instructions [here](https://shiny.posit.co/py/docs/deploy-on-prem.html#deploy-to-shiny-server-open-source). It also details how to add `shinomni` to the server.
 2. Clone this repository to your local machine using `git clone https://github.com/roximn148/shinomni`
