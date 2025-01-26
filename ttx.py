@@ -6,47 +6,13 @@
 # 
 # Author: roximn <roximn148@gmail.com>
 # ******************************************************************************
-import copy
-from dataclasses import dataclass
-
 from shiny import reactive
 from shiny.express import module, ui, render
 
 from fontTools import ttLib
 from fontTools.pens.svgPathPen import SVGPathPen
 
-# ******************************************************************************
-@dataclass
-class BBox:
-    x1: float = float('inf')
-    y1: float = float('inf')
-    x2: float = float('-inf')
-    y2: float = float('-inf')
-
-    def update(self, x1, y1, x2, y2):
-        self.x1 = min(self.x1, x1)
-        self.y1 = min(self.y1, y1)
-        self.x2 = max(self.x2, x2)
-        self.y2 = max(self.y2, y2)
-        return self
-
-    def addMargin(self, margin):
-        self.x1 -= margin
-        self.y1 -= margin
-        self.x2 += margin
-        self.y2 += margin
-        return self
-
-    @property
-    def width(self):
-        return self.x2 - self.x1
-
-    @property    
-    def height(self):
-        return self.y2 - self.y1
-
-    def __str__(self):
-        return f'{self.x1:.2f} {self.y1:.2f} {self.x2:.2f} {self.y2:.2f}'
+from .utils import BBox
 
 # ******************************************************************************
 @module
@@ -54,7 +20,7 @@ def modTtx(input, output, session):
     # Data ---------------------------------------------------------------------
     @reactive.calc
     def ttFont():
-        files = input.ttfFile()
+        files = input.ttxFile()
         if files is None:
             return None
         
@@ -97,7 +63,7 @@ def modTtx(input, output, session):
         return bbMax
     
     with ui.card(class_='bg-light border-dark'):
-        ui.input_file("ttfFile", "Choose a font file:",
+        ui.input_file("ttxFile", "Choose a font file:",
                       accept=['.ttf', '.otf', '*.*'],
                       multiple=False)
 
@@ -107,9 +73,12 @@ def modTtx(input, output, session):
         if tt is not None:
             total = len(tt.getGlyphOrder())
             if total > 0:
-                ui.input_slider("glyphCount", "Number of Glyphs:",
-                                min=1, max=total,
-                                value=[0, 9] if total >= 10 else [0, total-1])
+                with ui.layout_columns(col_widths=(4, 2)):
+                    ui.input_slider("glyphCount", "Number of Glyphs:",
+                                    min=1, max=total,
+                                    value=[0, 9] if total >= 10 else [0, total-1])
+                    ui.input_action_button("updateTable", "Update")
+                ui.tags.hr()
 
     @module
     def glyphImage(input, output, session, gid):
@@ -167,13 +136,16 @@ def modTtx(input, output, session):
                 transform='matrix(1, 0, 0, -1, 0, 0)'
             )
     
+    @reactive.event(input.updateTable)
+    def countRange():
+        return input.glyphCount()
 
     @render.express
     def renderGlyphTablle():
         tt = ttFont()
         if tt is not None:
             with ui.layout_column_wrap(width=1/6):
-                vi, vf = input.glyphCount()
+                vi, vf = countRange()
                 for i in range(vi, vf):
                     glyphName = tt.getGlyphOrder()[i]
                     with ui.card(): 

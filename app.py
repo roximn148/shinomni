@@ -13,6 +13,7 @@ from shinywidgets import render_plotly
 import shinyswatch
 
 from .ttx import modTtx
+from .raqm import modRaqm
 
 # CATEGORIES *******************************************************************
 CATEGORIES = ('Cc|Cf|Cs|Co|Cn|'
@@ -80,7 +81,7 @@ def findBlock(n: int) -> int:
 
 # UI ***************************************************************************
 ui.page_opts(
-    window_title='UTF Analyzer',
+    window_title='Shinomni',
     theme=shinyswatch.theme.spacelab,
 )
 ui.tags.style(
@@ -182,10 +183,13 @@ with ui.layout_columns(col_widths=(4, 8), fillable=True):
 # Panels -----------------------------------------------------------------------
 with ui.navset_pill():
 
-    # Font Tools Panel ---------------------------------------------------------
-    with ui.nav_panel("Font Tools"):
-        modTtx('ttx')
+    # Text Layout Panel --------------------------------------------------------
+    with ui.nav_panel("Raqm"):
+        modRaqm('ttx')
 
+    # Font Glyphs Panel --------------------------------------------------------
+    with ui.nav_panel("Font Glyphs"):
+        modTtx('ttx')
 
     # Counts Panel -------------------------------------------------------------
     with ui.nav_panel("Counts"):
