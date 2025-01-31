@@ -1,9 +1,9 @@
 # ******************************************************************************
 # Copyright (c) 2024. All rights reserved.
-# # This work is licensed under the Creative Commons Attribution 4.0 
+# # This work is licensed under the Creative Commons Attribution 4.0
 # International License. To view a copy of this license,
 # visit # http://creativecommons.org/licenses/by/4.0/.
-# 
+#
 # Author: roximn <roximn148@gmail.com>
 # ******************************************************************************
 from functools import reduce
@@ -33,14 +33,14 @@ def modRaqm(input, output, session):
         files = input.raqmFile()
         if files is None:
             return None
-        
+
         if len(files) < 1:
             return None
 
         fileData: dict = files[0]
         if 'datapath' not in fileData:
             return None
-        
+
         return fileData['datapath']
 
     @reactive.calc
@@ -48,7 +48,7 @@ def modRaqm(input, output, session):
         fontFile = ttFontFile()
         if fontFile is None:
             return None
-        
+
         try:
             tt = ttLib.TTFont(fontFile)
         except Exception as e:
@@ -56,31 +56,31 @@ def modRaqm(input, output, session):
             return None
 
         return tt
-    
+
     # Maximum bounding box -----------------------------------------------------
     @reactive.calc
     def maxBBox() -> BBox | None:
         tt = ttFont()
         if tt is None:
             return None
-    
+
         bbMax = BBox()
 
         glyfTable = tt['glyf']
         for glyphName in tt.getGlyphOrder():
             metrics = glyfTable[glyphName]
-            
+
             xMin = getattr(metrics, 'xMin', 0)
             yMin = getattr(metrics, 'yMin', 0)
             xMax = getattr(metrics, 'xMax', 0)
             yMax = getattr(metrics, 'yMax', 0)
-            
+
             bbMax.update(x1=xMin, y1=yMin, x2=xMax, y2=yMax)
-        
+
         bbMax.addMargin(100)
 
         return bbMax
-    
+
     # Font File Selection ------------------------------------------------------
     with ui.card(class_='bg-light border-dark'):
         with ui.layout_columns(col_widths=(8, 2, 2)):
@@ -104,7 +104,7 @@ def modRaqm(input, output, session):
             tt = ttFont()
             if tt is None:
                 return
-            
+
             go = tt.getGlyphOrder()
             glyphNames = [go[gi.gid] for gi in gis]
             glyphSet = tt.getGlyphSet()
@@ -146,7 +146,7 @@ def modRaqm(input, output, session):
 
             bbMax = maxBBox()
             W = x
-            
+
             ui.tags.svg(
                 ui.tags.Tag('line',
                             x1=f'{0}', y1='0',
@@ -180,7 +180,7 @@ def modRaqm(input, output, session):
             glRun = [cairo.Glyph(gid, dx, dy)]
 
             if outline:
-                ctx.set_source_rgba(color[0], color[1], color[2], 0.25)
+                ctx.set_source_rgba(0, 1, 0, 0.5)
                 ctx.arc(0, 0, 3, 0, 2 * math.pi)
                 ctx.stroke_preserve()
                 ctx.fill()
@@ -190,6 +190,7 @@ def modRaqm(input, output, session):
                 #       f'{extents.width}:{extents.height} - '
                 #       f'{extents.x_advance}:{extents.y_advance}')
 
+                ctx.set_source_rgba(0, 1, 1, 0.25)
                 ctx.set_line_width(1)
                 ctx.rectangle(extents.x_bearing, extents.y_bearing, extents.width, extents.height)
                 ctx.stroke()
@@ -214,7 +215,7 @@ def modRaqm(input, output, session):
                     ctx.line_to(+W, ay)
                     ctx.stroke()
 
-            ctx.set_source_rgba(*color, 1.0)
+            ctx.set_source_rgba(*color, 0.8)
             ctx.show_glyphs(glRun)
 
             ctx.restore()
@@ -225,12 +226,12 @@ def modRaqm(input, output, session):
         txt = input.textInput()
         if ttf is None or not txt:
             return
-        
+
         fontName = tt['name'].getName(1, 3, 1).toUnicode()
         direction = input.textDirection()
         lang = input.textLanguage()
 
-        defaultColor = (0, 1, 1)
+        defaultColor = (0, 0, 0)
         WIDTH, HEIGHT = 1200, 200
         SZ = 48
         MARGIN = 100
@@ -247,7 +248,7 @@ def modRaqm(input, output, session):
             try:
                 gInfos = getGlyphInfo(ttf, txt, direction, lang)
                 showMessage(f"{len(gInfos)} glyphs rendered.")
-                
+
                 svgData = ''
                 with tempfile.NamedTemporaryFile() as fp:
                     with cairo.SVGSurface(fp.name, WIDTH, HEIGHT) as surface:
@@ -267,7 +268,7 @@ def modRaqm(input, output, session):
                         ctx.move_to(0, -HEIGHT)
                         ctx.line_to(0, +HEIGHT)
                         ctx.stroke()
-                    
+
                         # Cairo drawing
                         breath = reduce(lambda v, e: v + e.xAdvance * EMF, gInfos, 0)
                         curX, curY = -breath, 0
