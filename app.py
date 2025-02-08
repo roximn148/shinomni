@@ -24,30 +24,7 @@ CATEGORIES = ('Cc|Cf|Cs|Co|Cn|'
 CATEGORIES.sort()
 
 # BLOCKS ***********************************************************************
-Block = namedtuple('Block', ['start', 'end', 'name'])
-reComment: str = r'^\s*#.*$'
-# """Match a complete line of text that start with optional whitespace characters,
-# followed by the hash symbol `#`, and then any number of
-# non-whitespace characters till the end of the line"""
-reBlockRange: str = r'^\s*([0-9A-Fa-f]+)\.\.([0-9A-Fa-f]+)\s*;\s*(.*)\s*$'
-# """Match three groups, two hexadecimal codes separated by two dots `..` followed
-# by a a semicolon `;` and additional text till end of the line"""
-
-# Read the UNICODE standard blocks text file and extract the ranges and the
-# respective block names. Assumes `Blocks.txt` file.
-bftxt = Path('Blocks.txt').read_text(encoding='utf8')
-lines = [l for l in bftxt.splitlines() if l.strip()]
-
-BLOCKS: list[Block] = []
-for line in lines:
-    if re.search(reComment, line):
-        continue
-
-    match = re.search(reBlockRange, line)
-    if match:
-        BLOCKS.append(Block(start=int(match.group(1), 16),
-                            end=int(match.group(2), 16),
-                            name=match.group(3)))
+from blocks import UnicodeBlocks as BLOCKS
 
 # Helper function to find the block of given character unicode
 def findBlock(n: int) -> int:
