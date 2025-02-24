@@ -1,0 +1,70 @@
+Serial,ID,Name,Abbrev,Location,Section,Contact
+1,A0248,Dr AbdulAziz Hajjaj AlThinayyan,Dr A H AlThinayyan,KFMC,Neuroradiology,055 331 1313
+2,A0018,Dr AbdulAziz Nasser AlSaad,Dr A N AlSaad,KFMC,Director Neuroradiology,050 915 0500
+3,A0107,Dr AbdulBaset AlShoaibi,Dr A AlShoaibi,PMAH,Neuroradiology,056 796 8276
+4,A0492,Dr AbdulKhaliq Ibrahim AlHifzi,Dr A I AlHifzi,Part Time,Neuroradiology,055 778 4141
+5,A0418,Dr Abdullah AlDosary,Dr A AlDosary,KFMC,Body Imaging,053 941 7862
+6,A0496,Dr Abdullah Ali AlQabbani,Dr A A AlQabbani,Part Time,Neuroradiology,054 139 9939
+7,A0019,Dr AbdulMalik AlSharidah,Dr A AlSharidah,KFMC,Director General Radiology,053 941 7626
+8,A0091,Dr AbdulRahim AlMutairi,Dr A AlMutairi,PMAH,Body Imaging/MSK,054 111 1812
+9,A0051,Dr AbdulRahman Abdu Jubran,Dr A A Jubran,KFMC,Neuroradiology,056 777 5574
+10,A0020,Dr AbdulRahman AlNaeem,Dr A AlNaeem,KFMC,Breast Imaging,050 619 8988
+11,A0419,Dr AbdulRahman AlZahrani,Dr A AlZahrani,KFMC,Body Imaging,050 856 6613
+12,A0092,Dr AbdulSalam AlQahtani,Dr A AlQahtani,PMAH,Nuclear Medicine,058 012 9564
+13,A0156,Dr Abeer AlMousa,Dr A AlMousa,KFMC,Director Breast Imaging,055 528 6760
+14,A0022,Dr Ahmad AlJefri,Dr A AlJefri,KFMC,Emergency Radiology,056 422 2246
+15,A0023,Dr Ahmed Ibrahim AlDraihem,Dr A I AlDraihem,KFMC,Director Pediatric Radiology,050 626 3137
+16,A0135,Dr Ahmed Rabah,Dr A Rabah,PMAH,Neuroradiology,050 057 1237
+17,A0054,Dr Aijaz Aziz Rawa,Dr A A Rawa,KFMC,General Radiology,059 267 7252
+18,A0223,Dr Ali Daghriri,Dr A Daghriri,KFMC,Neuroradiology,050 773 3478
+19,A0149,Dr AlJoharah A AlJabr,Dr A A AlJabr,KFMC,Director Academic/Pediatric Radiology,050 998 8000
+20,A0466,Dr Aml Moheyeldin,Dr A Moheyeldin,ALMAJMAA,General Radiology,054 217 0065
+21,A0057,Dr Anita Rafique,Dr A Rafique,KFMC,Breast Imaging,056 082 1954
+22,A0118,Dr Asmaa AbdelMouty,Dr A AbdelMouty,ALYAMAMAH,General Radiology,050 876 1976
+23,A0423,Dr Bader AlHariqi ,Dr B AlHariqi ,KFMC,Pediatrictric Radiology,050 001 3124
+24,A0201,Dr Ehab Ali Ahmed,Dr E A Ahmed,ALMAJMAA,Emergency Radiology,053 267 0699
+25,A0060,Dr Eman Abdelgadir,Dr E Abdelgadir,KFMC,General Radiology,056 427 2688
+26,A0448,Dr Fahad Amer AlShehri,Dr F A AlShehri,KFMC,Emergency Radiology,056 861 5533
+27,A0027,Dr Fahad Ibrahim AlGhmlas,Dr F I AlGhmlas,KFMC,Director Nuclear Medicine,053 577 4401
+28,A0125,Dr Fawzy Mohamed,Dr F Mohamed,ALDAWADMI,Emergency Radiology,053 817 8740
+29,A0247,Dr Feras Essa AlOmar,Dr F E AlOmar,KFMC,Neuroradiology,056 477 3112
+30,A0106,Dr Hassan Amer,Dr H Amer,PMAH,Emergency Radiology,055 820 7571
+31,A0484,Dr Ibrahim AlAwaad,Dr I AlAwaad,PMAH,Body Imaging/Cardiothoracic,055 514 1533
+32,A0080,Dr Imran Yousaf,Dr I Yousaf,ALMAJMAA,Emergency Radiology,055 149 0857
+33,A0157,Dr Intidhar El Bez Ghanem,Dr I E Ghanem,KFMC,Nuclear Medicine,055 332 0337
+34,A0121,Dr Issa AlKhalaf,Dr I AlKhalaf,ALYAMAMAH,General Radiology,053 622 8285
+35,A0031,Dr Khalid AlDosari ,Dr K AlDosari ,KFMC,Director Cardiothoracic/Body Imaging,050 511 6112
+36,A0079,Dr Khalid Ibrahim,Dr K Ibrahim,KFMC,Nuclear Medicine,058 028 2404
+37,A0477,Dr Khaloud AlGhamdi,Dr KAlGhamdi,KFMC,NeuroRadiology,054 112 2721
+38,A0033,Dr Leena Kattan,Dr L Kattan,KFMC,Body Imaging/MSK,055 522 1092
+39,A0104,Dr Mohammed Alkhader Thabet,Dr M A Thabet,PMAH,Body Imaging/Cardiothoracic,055 821 8364
+40,A0133,Dr Mohammed AlSayed Ali,Dr M AlSayed,ALZULFI,General Radiology,053 006 3567
+41,A0069,Dr Mohammed Hamdy Elshory,Dr M H Elshory,PMAH,General Radiology,054 518 4586
+42,A0040,Dr Mohammed Obaid AlHarbi,Dr M O AlHarbi,KFMC,CMO/Nuclear Medicine,054 111 2820
+43,A0098,Dr Mohammed Saeed AlZahrani,Dr M S AlZahrani,PMAH,Nuclear Medicine,056 367 6772
+44,A0123,Dr Moustafa Gaber,Dr M Gaber,ALATAWIYAH,General Radiology,055 386 5135
+45,A0053,Dr Muath Zaher AlYami,Dr M Z AlYami,KFMC,Body Imaging,059 499 9588
+46,A0476,Dr Muhammad S Qureshi,Dr M S Qureshi,KFMC,Emergency Radiology,056 732 4961
+47,A0417,Dr Muhiaddin M Qadri ,Dr M M Qadri ,KFMC,Body Imaging,056 612 9662
+48,A0260,Dr Nasser Faraj AlAmri,Dr N F AlAmri,KFMC,Body Imaging/Cardiothoracic,055 513 1259
+49,A0071,Dr Nawal AlOgabi ,Dr N AlOgabi ,KFMC,General Radiology,055 844 1179
+50,A0453,Dr Nourah AlRuwaili,Dr N AlRuwaili,KFMC,Neuroradiology,059 295 0565
+51,A0420,Dr Ola Kamal Habash,Dr O K Habash,KFMC,Body Imaging/Cardiothoracic,053 941 7013
+52,A0109,Dr Omar Salem Basahel,Dr O S Basahel,PMAH,General Radiology,054 128 3950
+53,A0249,Dr Rayyan Ahmad AlQurayan,Dr R A AlQurayan,KFMC,Neuroradiology,054 460 1406
+54,A0048,Dr Reem AlSaleh,Dr R AlSaleh,KFMC,Nuclear Medicine,055 993 3286
+55,A0114,Dr Rehab AlZahrani,Dr R AlZahrani,ALYAMAMAH,Breast Imaging,054 638 8141
+56,A0044,Dr Rima Ismail Tulbah,Dr R I Tulbah,KFMC,Nuclear Medicine,054 033 9373
+57,A0145,Dr Saleh AbduRabeh Ali,Dr S A Ali,PMAH,Body Imaging,050 284 3550
+58,A0220,Dr Saleh AlShoaibani,Dr S AlShoaibani,PMAH,Body Imaging,050 544 3366
+59,A0129,Dr Samar Mahrous Goudh,Dr S M Goudh,ALZULFI,General Radiology,054 910 5264
+60,A0050,Dr Sawsan AlHazaa,Dr S AlHazaa,KFMC,Nuclear Medicine,054 215 5525
+61,A0130,Dr Shaimaa Abdelazim,Dr S Abdelazim,ALZULFI,General Radiology,055 884 1996
+62,A0064,Dr Sofia Muzzafar,Dr S Muzzafar,KFMC,Neuroradiology,055 796 2394
+63,A0490,Dr Suhayb AlDhilan,Dr S AlDhilan,Part Time,Neuroradiology,054 076 5888
+64,A0422,Dr Sulaiman Hamad Alsheikh,Dr S H Alsheikh,KFMC,Neuroradiology,055 023 6626
+65,A0078,Dr Taha Hezam Alkhulaidi,Dr T H Alkhulaidi,KFMC,Emergency Radiology,053 788 5567
+66,A0047,Dr Yahya Mashhor,Dr Y Mashhor,KFMC,Body Imaging,054 007 0777
+67,A0119,Dr Zaibunissa Uddin,Dr Zaibunissa,ALYAMAMAH,General Radiology,050 259 8381
+68,A0243,Dr Ziyad AlAjlan,Dr Z AlAjlan,PMAH,General Radiology,059 059 8787
+69,Sec51576307,Dr Ziyad AlZahim,Dr Z AlZahim,PMAH,General Radiology,050 522 5332

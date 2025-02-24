@@ -12,6 +12,8 @@ from shiny.express import ui
 from .utf import modUtf
 from .ttx import modTtx
 from .raqm import modRaqm
+from .schd import modSchedule
+
 
 # UI ***************************************************************************
 ui.page_opts(
@@ -20,7 +22,9 @@ ui.page_opts(
 )
 ui.tags.style(
     '.progress.shiny-file-input-progress{height: auto;} '
-    '.dataframe thead th{text-align:left;text-transform:capitalize;}'
+    '.dataframe thead th{text-align:left;text-transform:capitalize;} '
+    '.container {max-width:100%;margin:8px 8px;} '
+    '.selectize-input {font-size:0.8rem;}'
 )
 
 ui.h3(
@@ -36,6 +40,10 @@ ui.h3(
 
 # Panels -----------------------------------------------------------------------
 with ui.navset_pill():
+
+    # Text Layout Panel --------------------------------------------------------
+    with ui.nav_panel("Schedule"):
+        modSchedule('schedule')
 
     # Text Layout Panel --------------------------------------------------------
     with ui.nav_panel("Raqm"):
