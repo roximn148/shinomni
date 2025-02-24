@@ -24,7 +24,9 @@ ui.tags.style(
     '.progress.shiny-file-input-progress{height: auto;} '
     '.dataframe thead th{text-align:left;text-transform:capitalize;} '
     '.container {max-width:100%;margin:8px 8px;} '
-    '.selectize-input {font-size:0.8rem;}'
+    '.selectize-input {font-size:0.7rem;} '
+    '.dataframe thead th {text-align: center;} '
+    'table td {text-align: center;}'
 )
 
 ui.h3(
@@ -36,7 +38,6 @@ ui.h3(
            'border-radius: 10px;'
            'border-width: 2px;'),
 )
-
 
 # Panels -----------------------------------------------------------------------
 with ui.navset_pill():
@@ -53,6 +54,6 @@ with ui.navset_pill():
     with ui.nav_panel("Font Glyphs"):
         modTtx('ttx')
 
-    # UTF Panel -------------------------------------------------------------
+    # UTF Panel ----------------------------------------------------------------
     with ui.nav_panel("UTF"):
         modUtf('utf')

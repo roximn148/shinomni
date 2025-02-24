@@ -10,10 +10,38 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from collections import defaultdict
 
+import openpyxl
 from shiny import reactive, req
 from shiny.express import module, ui, render
 
 import pandas as pd
+
+
+# ******************************************************************************
+def incrementColumn(col: str, increment: int = 1):
+    """
+    Increment the given column index by one.
+
+    :param col(str): The starting column as a string (e.g., "A", "B", ..., "Z", "AA")
+    :param increment(int): Amount to increment by (default is 1)
+    :return: The next column as a string
+    """
+    # Convert the column to its numeric representation
+    num = 0
+    for char in col:
+        num = num * 26 + (ord(char) - ord('A') + 1)
+
+    # Increment the numeric representation by one
+    num += increment
+
+    # Convert the incremented numeric value back to a column string
+    nextColumn = ""
+    while num > 0:
+        num, remainder = divmod(num - 1, 26)
+        nextColumn = chr(remainder + ord('A')) + nextColumn
+
+    return nextColumn
+
 
 # ******************************************************************************
 @module
@@ -46,6 +74,34 @@ def modSchedule(input, output, session):
     def weekDates() -> list[datetime.date]:
         weekStart = req(input.slxWeek())
         return [(weekStart + timedelta(days=i)) for i in range(7)]
+
+    # Excel file ---------------------------------------------------------------
+    @reactive.calc
+    def excelWorkbook() -> Path:
+        weekStart = req(input.slxWeek())
+        weekEnd = weekStart + timedelta(days=6)
+
+        xlTitle = 'B2'
+        xlDates = [('F', 5), ('F', 18), ('F', 25)]
+        weekLabel = f'{weekStart:%Y%b%d}-{weekEnd:%d}'
+
+        wb = openpyxl.load_workbook(Path(__file__).parent / 'ThreeShiftWeeklyRoster.xlsx')
+        ws  = wb['template']
+        ws.title = weekLabel
+        ws[xlTitle] = f'King Khalid Hospital AlMajmah Radiologist Schedule - {weekStart:%B %Y}'
+
+        for col, row in xlDates:
+            for i in range(7):
+                cellName = f'{incrementColumn(col, i)}{row}'
+                d = weekStart + timedelta(days=i)
+                try:
+                    ws[cellName] = f'{d:%d}'
+                except Exception as e:
+                    print(f'Error{cellName}: {e}')
+
+        excelFile = Path(__file__).parent / 'workbooks' / f'WeeklyRoster{weekLabel}.xlsx'
+        wb.save(excelFile)
+        return excelFile
 
     # Roster UI ----------------------------------------------------------------
     @render.express
@@ -138,13 +194,14 @@ def modSchedule(input, output, session):
         ]
         return pd.DataFrame(data, columns=['Shifts', *weekDates()])
 
-
     @render.express
     @reactive.event(input.btnUpdate)
     def dataTableUI():
         ui.tags.h3(input.slxSection())
 
-        @render.table(escape=False)
+        ui.tags.pre(str(excelWorkbook()))
+
+        @render.table(escape=False, classes="table table-striped")
         def _():
             labelMap = radiologistsDf()
             if len(labelMap) <= 0:
@@ -155,4 +212,4 @@ def modSchedule(input, output, session):
 
             df = rosterData()
             df.iloc[:, 1:] = df.iloc[:, 1:].apply(lambda x: x.map(labelMap), axis=0)
-            return  df
+            return df
