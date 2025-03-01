@@ -9,43 +9,26 @@
 from datetime import datetime, timedelta
 from pathlib import Path
 from collections import defaultdict
+from enum import StrEnum, auto
 
 import openpyxl
 from shiny import reactive, req
 from shiny.express import module, ui, render
-
 import pandas as pd
 
 
 # ******************************************************************************
-def incrementColumn(col: str, increment: int = 1):
-    """
-    Increment the given column index by one.
-
-    :param col(str): The starting column as a string (e.g., "A", "B", ..., "Z", "AA")
-    :param increment(int): Amount to increment by (default is 1)
-    :return: The next column as a string
-    """
-    # Convert the column to its numeric representation
-    num = 0
-    for char in col:
-        num = num * 26 + (ord(char) - ord('A') + 1)
-
-    # Increment the numeric representation by one
-    num += increment
-
-    # Convert the incremented numeric value back to a column string
-    nextColumn = ""
-    while num > 0:
-        num, remainder = divmod(num - 1, 26)
-        nextColumn = chr(remainder + ord('A')) + nextColumn
-
-    return nextColumn
+class Sections(StrEnum):
+    XR = auto()
+    US = auto()
+    NEURO = auto()
+    NON_NEURO_PLAIN = auto()
+    NON_NEURO_CONTRAST = auto()
 
 
 # ******************************************************************************
 @module
-def modSchedule(input, output, session):
+def modSchedule3s(input, output, session):
     # Radiologists -------------------------------------------------------------
     @reactive.calc
     def radiologistsDf():
@@ -82,7 +65,7 @@ def modSchedule(input, output, session):
         weekEnd = weekStart + timedelta(days=6)
 
         xlTitle = 'B2'
-        xlDates = [('F', 5), ('F', 18), ('F', 25)]
+        xlDates: list[str] = ['F5:L5', 'F18:L18', 'F25:L25']
         weekLabel = f'{weekStart:%Y%b%d}-{weekEnd:%d}'
 
         wb = openpyxl.load_workbook(Path(__file__).parent / 'ThreeShiftWeeklyRoster.xlsx')
@@ -90,17 +73,21 @@ def modSchedule(input, output, session):
         ws.title = weekLabel
         ws[xlTitle] = f'King Khalid Hospital AlMajmah Radiologist Schedule - {weekStart:%B %Y}'
 
-        for col, row in xlDates:
-            for i in range(7):
-                cellName = f'{incrementColumn(col, i)}{row}'
+        # Fill in the dates for each section of the schedule.
+        for rng in xlDates:
+            for i, cell in enumerate(ws[rng][0]):
                 d = weekStart + timedelta(days=i)
-                try:
-                    ws[cellName] = f'{d:%d}'
-                except Exception as e:
-                    print(f'Error{cellName}: {e}')
+                cell.value  = f'{d:%d}'
 
-        excelFile = Path(__file__).parent / 'workbooks' / f'WeeklyRoster{weekLabel}.xlsx'
+        # Ensure the parent folder for excelFile exists
+        excelFolder = Path(__file__).parent / 'workbooks'
+        excelFolder.mkdir(parents=True, exist_ok=True)
+
+        excelFile = excelFolder / f'WeeklyRoster{weekLabel}.xlsx'
         wb.save(excelFile)
+        
+        ui.notification_show(f"Created {excelFile}", type="message",duration=2)
+        
         return excelFile
 
     # Roster UI ----------------------------------------------------------------
@@ -108,7 +95,7 @@ def modSchedule(input, output, session):
     def rosterUI():
         @render.express
         def weekSelector():
-            with ui.layout_columns(col_widths=[4, 4, 2, 2]):
+            with ui.layout_columns():
                 today = datetime.now()
                 lastSunday = today - timedelta(days=(today.isoweekday() % 7))
                 ui.input_date('slxWeek', 'Week Selection',
@@ -117,11 +104,12 @@ def modSchedule(input, output, session):
                             daysofweekdisabled=list(range(1,7)))
 
                 ui.input_selectize("slxSection", "Section",
-                                    choices=['X-Rays (ER/INP)',
-                                             'Ultrasound (ER/INP/OPD)',
-                                             'Non-Neuro CT (C- Only)',
-                                             'Non-Neuro CT (C+ Only)',
-                                             'Neuro CT (C- and C+)'],
+                                    choices={
+                                        Sections.XR: 'X-Rays (ER/INP)',
+                                        Sections.US: 'Ultrasound (ER/INP/OPD)',
+                                        Sections.NEURO: 'Neuro CT (C- and C+)',
+                                        Sections.NON_NEURO_PLAIN: 'Non-Neuro CT (C- Only)',
+                                        Sections.NON_NEURO_CONTRAST: 'Non-Neuro CT (C+ Only)'},
                                     multiple=False,
                                     remove_button=False)
 
@@ -185,7 +173,7 @@ def modSchedule(input, output, session):
             ui.update_selectize(selector, selected='')
 
     @reactive.calc
-    def rosterData():
+    def rosterDf():
         """Generates roster data based on the selected shifts and dates"""
         data = [
             ['C', input.slxShiftC0(), input.slxShiftC1(), input.slxShiftC2(), input.slxShiftC3(), input.slxShiftC4(), input.slxShiftC5(), input.slxShiftC6()],
@@ -195,11 +183,8 @@ def modSchedule(input, output, session):
         return pd.DataFrame(data, columns=['Shifts', *weekDates()])
 
     @render.express
-    @reactive.event(input.btnUpdate)
     def dataTableUI():
-        ui.tags.h3(input.slxSection())
-
-        ui.tags.pre(str(excelWorkbook()))
+        ui.tags.h3(input.slxSection().upper())
 
         @render.table(escape=False, classes="table table-striped")
         def _():
@@ -210,6 +195,43 @@ def modSchedule(input, output, session):
             labels = [f'{n}<br/>({i})' for i, n in zip(labelMap['ID'], labelMap['Abbrev'])]
             labelMap = defaultdict(lambda: '', zip(labelMap['ID'], labels))
 
-            df = rosterData()
+            df = rosterDf().copy()
             df.iloc[:, 1:] = df.iloc[:, 1:].apply(lambda x: x.map(labelMap), axis=0)
             return df
+
+    @render.express
+    @reactive.event(input.btnUpdate)
+    def updateRoster():
+        
+        labelMap = radiologistsDf()
+        if len(labelMap) <= 0:
+            print("No radiologists found")
+            return None
+
+
+        labels = [f'{n}\n({i})' for i, n in zip(labelMap['ID'], labelMap['Abbrev'])]
+        labelMap = defaultdict(lambda: '', zip(labelMap['ID'], labels))
+       
+        df = rosterDf().copy()
+        df.iloc[:, 1:] = df.iloc[:, 1:].apply(lambda x: x.map(labelMap), axis=0)
+
+        xlSectionRanges: dict[Sections, list[str]] = {
+           Sections.XR: ['F26:L26', 'F27:L27', 'F28:L28'],
+           Sections.US: ['F19:L19', 'F20:L20', 'F21:L21'],
+           Sections.NEURO: ['F6:L6', 'F9:L9', 'F12:L12'],
+           Sections.NON_NEURO_PLAIN: ['F7:L7', 'F10:L10', 'F13:L13'],
+           Sections.NON_NEURO_CONTRAST: ['F8:L8', 'F11:L11', 'F14:L14'],
+        }
+        
+        xl = excelWorkbook()
+        ui.tags.pre(str(xl))
+        wb = openpyxl.load_workbook(xl)
+        ws = wb.active
+
+        section = input.slxSection()
+        for i, rng in enumerate(xlSectionRanges[section]):
+            for j, cell in enumerate(ws[rng][0]):
+                cell.value  = df.iloc[i, j+1]
+
+        wb.save(xl)
+        _ = ui.notification_show(f"Saved {xl.name}", type="message",duration=2)
